@@ -42,7 +42,7 @@ export default function S1Identificacao() {
         id="kr-main"
         className="relative z-10 flex-1 flex flex-col px-5 py-10 md:px-12 md:py-16 lg:px-20 lg:py-20"
       >
-        <div className="flex flex-col gap-10 lg:flex-row lg:gap-12 lg:items-center lg:justify-center flex-1">
+        <div className="flex flex-col gap-10 lg:flex-row lg:gap-50 lg:items-center lg:justify-center flex-1">
           {/* HERO */}
           <section
             aria-labelledby="kr-hero-title"
