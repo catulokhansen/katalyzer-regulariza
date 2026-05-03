@@ -11,13 +11,16 @@ The user writes in **Brazilian Portuguese**; respond in Portuguese when the conv
 ## Commands
 
 ```bash
-npm run dev      # next dev — http://localhost:3000
-npm run build    # next build
-npm run start    # next start (production)
-npm run lint     # eslint (flat config, eslint-config-next core-web-vitals + typescript)
+npm run dev            # next dev — http://localhost:3000
+npm run build          # next build
+npm run start          # next start (production)
+npm run lint           # eslint (flat config, eslint-config-next core-web-vitals + typescript)
+npm test               # vitest run (unit tests in lib/**/*.test.ts, env: node)
+npm run test:watch     # vitest (interactive)
+npm run test:coverage  # vitest run --coverage (v8 provider; report in coverage/)
 ```
 
-There are **no tests** configured.
+Tests cover only pure domain code in `lib/` (validators, formatters, parcelas, tributos, debitos, store helpers, utils). Components and store actions are not tested yet.
 
 ## Architecture
 
