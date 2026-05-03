@@ -16,15 +16,13 @@ import { DEBITOS_MOCK } from "@/lib/debitos";
 import { useRegularizaStore } from "@/lib/store";
 
 function S2Content() {
-  // Acordeão exclusivo — primeiro grupo aberto por padrão
+  // Acordeão exclusivo — todos os grupos fechados por padrão
   const grupos = ORDEM_TRIBUTOS.map((tipo) => ({
     tipo,
     debitos: DEBITOS_MOCK.filter((d) => d.tipo === tipo),
   })).filter((g) => g.debitos.length > 0);
 
-  const [expandedTipo, setExpandedTipo] = useState<TributoTipo | null>(
-    grupos[0]?.tipo ?? null,
-  );
+  const [expandedTipo, setExpandedTipo] = useState<TributoTipo | null>(null);
 
   const selectAllNegociaveis = useRegularizaStore(
     (s) => s.selectAllNegociaveis,
