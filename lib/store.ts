@@ -39,7 +39,7 @@ interface RegularizaState {
 const initialState = {
   doc: null,
   selectedDebitos: {} as Record<string, true>,
-  parcelas: 0,
+  parcelas: 1,
   termosAceitos: false,
   metodoPagamento: "pix" as MetodoPagamento,
   protocolo: null,
