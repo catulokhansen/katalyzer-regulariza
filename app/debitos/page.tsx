@@ -40,6 +40,7 @@ function S2Content() {
   );
   const totalNegociavel = negociaveis.reduce((s, d) => s + d.valor, 0);
   const qtdJudicial = DEBITOS_MOCK.filter((d) => d.status === "ajuizado").length;
+  const qtdEncaminhado = DEBITOS_MOCK.filter((d) => d.cobranca).length;
 
   return (
     <div className="relative min-h-screen flex flex-col bg-kr-cream font-sans">
@@ -60,6 +61,7 @@ function S2Content() {
           totalNegociavel={totalNegociavel}
           qtdNegociavel={negociaveis.length}
           qtdJudicial={qtdJudicial}
+          qtdEncaminhado={qtdEncaminhado}
         />
 
         <div className="mt-4 mb-2 flex items-center justify-between gap-3 flex-wrap">

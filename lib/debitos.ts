@@ -12,6 +12,7 @@ export interface Debito {
   referenciaCurta: string;
   valor: number;
   processo?: string;
+  cobranca?: "encaminhado" | "protestado";
 }
 
 export interface Contribuinte {
@@ -51,6 +52,7 @@ export const DEBITOS_MOCK: Debito[] = [
     subtitulo: "Apto 301 — Rua das Acácias, 142",
     referenciaCurta: "Apto 301",
     valor: 1842.5,
+    cobranca: "encaminhado",
   },
   {
     id: "d2",
@@ -104,6 +106,7 @@ export const DEBITOS_MOCK: Debito[] = [
     subtitulo: "Prestação de serviços autônomos",
     referenciaCurta: "Autônoma",
     valor: 524.3,
+    cobranca: "encaminhado",
   },
   {
     id: "d7",
@@ -159,6 +162,7 @@ export const DEBITOS_MOCK: Debito[] = [
     subtitulo: "Loja 02 — Av. Paulista, 1.020",
     referenciaCurta: "Loja 02",
     valor: 8740.0,
+    cobranca: "protestado",
   },
 
   // Multa de postura — 1
