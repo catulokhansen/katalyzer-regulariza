@@ -14,7 +14,7 @@ import { IconArrowLeft, IconArrowRight, IconLock } from "@/components/kr/icons";
 import { fmtBRL, maskDocPartial } from "@/lib/formatters";
 import { CONTRIBUINTE_MOCK } from "@/lib/debitos";
 import { TRIBUTO_META, ORDEM_TRIBUTOS } from "@/lib/tributos";
-import { getDebitosSelecionados, useRegularizaStore } from "@/lib/store";
+import { getDebitosSelecionados, useRegularizaStore, type CanalEnvio } from "@/lib/store";
 import {
   calcParcela,
   calcJurosEstimados,
@@ -27,8 +27,6 @@ const TERMOS_LISTA = [
   "Atrasos superiores a 90 dias em qualquer parcela podem implicar rescisão e inscrição em dívida ativa.",
   "Autorizo o envio do termo de confissão de dívida e dos boletos para o e-mail e WhatsApp cadastrados.",
 ];
-
-type CanalEnvio = "email" | "sms" | null;
 
 function isContatoValido(canal: CanalEnvio, contato: string) {
   if (!canal) return false;
@@ -48,6 +46,7 @@ function S4Content() {
   const selectedDebitos = useRegularizaStore((s) => s.selectedDebitos);
   const parcelas = useRegularizaStore((s) => s.parcelas);
   const confirmarAcordo = useRegularizaStore((s) => s.confirmarAcordo);
+  const setCanalContato = useRegularizaStore((s) => s.setCanalContato);
 
   const [aceitou, setAceitou] = useState(false);
   const [showTermos, setShowTermos] = useState(false);
@@ -75,6 +74,7 @@ function S4Content() {
 
   const handleConfirmar = () => {
     if (!podeConfirmar) return;
+    setCanalContato(canal, contato.trim());
     confirmarAcordo();
     router.push("/pagamento");
   };

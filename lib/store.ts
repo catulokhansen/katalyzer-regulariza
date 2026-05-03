@@ -8,6 +8,7 @@ import {
 } from "./debitos";
 
 export type MetodoPagamento = "pix" | "boleto" | "debito";
+export type CanalEnvio = "email" | "sms" | null;
 
 interface RegularizaState {
   // S1
@@ -18,6 +19,8 @@ interface RegularizaState {
   parcelas: number;
   // S4
   termosAceitos: boolean;
+  canalEnvio: CanalEnvio;
+  contatoEnvio: string;
   // S5
   metodoPagamento: MetodoPagamento;
   protocolo: string | null;
@@ -31,6 +34,7 @@ interface RegularizaState {
   clearSelection: () => void;
   setParcelas: (n: number) => void;
   setTermosAceitos: (v: boolean) => void;
+  setCanalContato: (canal: CanalEnvio, contato: string) => void;
   setMetodoPagamento: (m: MetodoPagamento) => void;
   confirmarAcordo: () => string;
   reset: () => void;
@@ -41,6 +45,8 @@ const initialState = {
   selectedDebitos: {} as Record<string, true>,
   parcelas: 1,
   termosAceitos: false,
+  canalEnvio: null as CanalEnvio,
+  contatoEnvio: "",
   metodoPagamento: "pix" as MetodoPagamento,
   protocolo: null,
   protocoloEmitidoEm: null,
@@ -99,6 +105,9 @@ export const useRegularizaStore = create<RegularizaState>()(
       setParcelas: (n) => set({ parcelas: n }),
 
       setTermosAceitos: (v) => set({ termosAceitos: v }),
+
+      setCanalContato: (canal, contato) =>
+        set({ canalEnvio: canal, contatoEnvio: contato }),
 
       setMetodoPagamento: (m) => set({ metodoPagamento: m }),
 

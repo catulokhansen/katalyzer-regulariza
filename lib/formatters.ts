@@ -42,3 +42,30 @@ export function maskDocPartial(doc: string): string {
   }
   return doc;
 }
+
+export function maskContato(canal: "email" | "sms" | null, contato: string): string {
+  if (!canal) return "";
+  const v = contato.trim();
+  if (!v) return "";
+
+  if (canal === "email") {
+    const at = v.indexOf("@");
+    if (at < 1) return v;
+    const local = v.slice(0, at);
+    const domain = v.slice(at);
+    const head = local.slice(0, Math.min(2, local.length));
+    return `${head}***${domain}`;
+  }
+
+  let digits = v.replace(/\D/g, "");
+  if (digits.startsWith("55") && (digits.length === 12 || digits.length === 13)) {
+    digits = digits.slice(2);
+  }
+  if (digits.length < 10) return v;
+  const ddd = digits.slice(0, 2);
+  const last2 = digits.slice(-2);
+  if (digits.length === 11) {
+    return `(${ddd}) 9****-**${last2}`;
+  }
+  return `(${ddd}) ****-**${last2}`;
+}
