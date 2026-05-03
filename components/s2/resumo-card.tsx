@@ -54,7 +54,7 @@ export function ResumoCard({
         <div className="font-display font-semibold text-[11px] tracking-[.18em] uppercase text-kr-deep-78">
           Encaminhado ou protestado
         </div>
-        <div className="font-display font-bold text-[20px] md:text-[22px] text-kr-deep tracking-[-0.4px] mt-1.5 kr-tabular">
+        <div className="font-display font-bold text-[20px] md:text-[22px] text-kr-error tracking-[-0.4px] mt-1.5 kr-tabular">
           {qtdEncaminhado} débito{qtdEncaminhado !== 1 ? "s" : ""}
         </div>
         <div className="font-sans font-medium text-[12px] text-kr-deep-78 mt-0.5">
