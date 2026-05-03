@@ -138,7 +138,8 @@ function S5Content() {
 
         {concluido ? (
           <Conclusao
-            protocolo={protocolo ?? "—"}
+            // RouteGuard requires protocolo on /pagamento, so it is always set here.
+            protocolo={protocolo!}
             protocoloEmitidoEm={protocoloEmitidoEm ?? ""}
             canalEnvio={canalEnvio}
             contatoEnvio={contatoEnvio}

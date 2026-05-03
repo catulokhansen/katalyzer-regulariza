@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import {
   IconCheckCircle,
   IconEnvelope,
@@ -55,6 +56,13 @@ export function Conclusao({
 }: ConclusaoProps) {
   const contatoMascarado = maskContato(canalEnvio, contatoEnvio);
   const CanalIcon = canalEnvio === "sms" ? IconWhatsapp : IconEnvelope;
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  // Move focus to the success heading on mount so keyboard/screen-reader
+  // users land in the new view instead of on the now-unmounted CTA.
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, []);
 
   const handleBaixarTermo = () => {
     window.alert("Em breve: download do termo do acordo (PDF).");
@@ -63,6 +71,7 @@ export function Conclusao({
   return (
     <section
       aria-labelledby="kr-conclusao-title"
+      aria-live="polite"
       className="mt-7 grid gap-6 pb-10"
     >
       {/* Hero card */}
@@ -79,7 +88,9 @@ export function Conclusao({
           </div>
           <h2
             id="kr-conclusao-title"
-            className="font-display font-bold text-[22px] md:text-[26px] tracking-[-0.4px] text-kr-deep mt-1"
+            ref={headingRef}
+            tabIndex={-1}
+            className="font-display font-bold text-[22px] md:text-[26px] tracking-[-0.4px] text-kr-deep mt-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-kr-cyan focus:outline-none"
           >
             Tudo pronto, {protocolo}.
           </h2>
