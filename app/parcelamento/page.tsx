@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/kr/page-header";
 import { CropMarks } from "@/components/kr/crop-marks";
@@ -9,7 +8,6 @@ import { SkipLink } from "@/components/kr/skip-link";
 import { RouteGuard } from "@/components/kr/route-guard";
 import { OpcaoParcela } from "@/components/s3/opcao-parcela";
 import { SimulacaoCard } from "@/components/s3/simulacao-card";
-import { TermosModal } from "@/components/s3/termos-modal";
 import { IconArrowLeft, IconArrowRight } from "@/components/kr/icons";
 import { fmtBRL } from "@/lib/formatters";
 import { getDebitosSelecionados, useRegularizaStore } from "@/lib/store";
@@ -20,10 +18,6 @@ function S3Content() {
   const selectedDebitos = useRegularizaStore((s) => s.selectedDebitos);
   const parcelas = useRegularizaStore((s) => s.parcelas);
   const setParcelas = useRegularizaStore((s) => s.setParcelas);
-  const termosAceitos = useRegularizaStore((s) => s.termosAceitos);
-  const setTermosAceitos = useRegularizaStore((s) => s.setTermosAceitos);
-
-  const [termoOpen, setTermoOpen] = useState(false);
 
   const debitosSelecionados = getDebitosSelecionados(selectedDebitos);
   const totalDebito = debitosSelecionados.reduce((s, d) => s + d.valor, 0);
@@ -101,33 +95,8 @@ function S3Content() {
               ))}
             </div>
 
-            {/* Aceite de termos */}
-            <label className="mt-6 flex items-start gap-3 px-4 py-3.5 bg-kr-paper rounded-[10px] border border-kr-deep/10 cursor-pointer hover:bg-kr-paper/70 transition-colors">
-              <input
-                type="checkbox"
-                checked={termosAceitos}
-                onChange={(e) => setTermosAceitos(e.target.checked)}
-                className="w-[18px] h-[18px] mt-0.5 cursor-pointer accent-kr-deep"
-              />
-              <span className="font-sans text-[13px] text-kr-deep/[0.85] leading-snug">
-                Li e concordo com os{" "}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setTermoOpen(true);
-                  }}
-                  className="kr-link-focus text-kr-deep font-semibold bg-transparent border-0 p-0 cursor-pointer underline underline-offset-2"
-                >
-                  termos do parcelamento
-                </button>{" "}
-                e autorizo a confissão de dívida correspondente.
-              </span>
-            </label>
-
             {/* Nota legal */}
-            <p className="mt-3 mb-0 font-sans text-[11px] leading-[1.55] text-kr-deep-55">
+            <p className="mt-6 mb-0 font-sans text-[11px] leading-[1.55] text-kr-deep-55">
               Os juros estimados acima são calculados pela Selic vigente. O
               valor real de cada parcela é definido na data do vencimento e
               pode variar conforme a taxa do mês.
@@ -167,7 +136,7 @@ function S3Content() {
           </div>
           <button
             type="button"
-            disabled={!termosAceitos}
+            disabled={!parcelas}
             onClick={() => router.push("/revisao")}
             className="kr-focus-ring h-14 px-6 rounded-[10px] border-0 text-white font-display font-semibold text-[15px] inline-flex items-center gap-3 tracking-[.2px] transition-all duration-150 bg-kr-deep shadow-[0_8px_24px_rgba(10,42,95,0.25)] hover:bg-kr-violet hover:-translate-y-px disabled:bg-kr-deep/30 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:bg-kr-deep/30 disabled:hover:translate-y-0"
           >
@@ -179,14 +148,6 @@ function S3Content() {
           </button>
         </div>
       </footer>
-
-      <TermosModal
-        open={termoOpen}
-        onOpenChange={setTermoOpen}
-        onAccept={() => setTermosAceitos(true)}
-        plano={planoAtual}
-        totalDebito={totalDebito}
-      />
     </div>
   );
 }

@@ -425,7 +425,7 @@ function TermoCompletoModal({
 
 export default function S4Revisao() {
   return (
-    <RouteGuard require={["doc", "selecionados", "parcelas", "termos"]}>
+    <RouteGuard require={["doc", "selecionados", "parcelas"]}>
       <S4Content />
     </RouteGuard>
   );
