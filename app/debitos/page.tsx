@@ -79,23 +79,19 @@ function S2Content() {
           </button>
         </div>
 
-        <div className="bg-white border border-kr-deep-12 rounded-xl overflow-hidden">
-          {grupos.map((g, gi) => (
-            <div
+        <div className="flex flex-col gap-2.5">
+          {grupos.map((g) => (
+            <GrupoTributo
               key={g.tipo}
-              className={gi > 0 ? "border-t border-kr-deep-12" : ""}
-            >
-              <GrupoTributo
-                tipo={g.tipo}
-                debitos={g.debitos}
-                expanded={expandedTipo === g.tipo}
-                onToggle={() =>
-                  setExpandedTipo((curr) =>
-                    curr === g.tipo ? null : g.tipo,
-                  )
-                }
-              />
-            </div>
+              tipo={g.tipo}
+              debitos={g.debitos}
+              expanded={expandedTipo === g.tipo}
+              onToggle={() =>
+                setExpandedTipo((curr) =>
+                  curr === g.tipo ? null : g.tipo,
+                )
+              }
+            />
           ))}
         </div>
       </main>

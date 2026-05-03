@@ -29,7 +29,11 @@ export function GrupoTributo({
     .reduce((s, d) => s + d.valor, 0);
 
   return (
-    <div>
+    <div
+      className={`bg-white border border-kr-deep-12 rounded-xl overflow-hidden ${
+        expanded ? "shadow-[inset_3px_0_0_var(--color-kr-violet)]" : ""
+      }`}
+    >
       <div
         role="button"
         tabIndex={0}
