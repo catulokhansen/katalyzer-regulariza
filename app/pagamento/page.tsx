@@ -92,10 +92,6 @@ function S5Content() {
     setConcluido(true);
   };
 
-  const handlePagarDepois = () => {
-    setConcluido(true);
-  };
-
   const handleNovaConsulta = () => {
     reset();
     router.push("/");
@@ -242,14 +238,6 @@ function S5Content() {
             <div className="font-sans text-[12px] text-kr-deep-62 hidden md:flex items-center gap-2">
               <IconLock size={14} /> ambiente seguro · prefeitura
             </div>
-            <button
-              type="button"
-              onClick={handlePagarDepois}
-              className="kr-link-focus h-14 px-5 rounded-[10px] border border-kr-deep/[0.20] bg-transparent text-kr-deep cursor-pointer font-display font-semibold text-[14px] inline-flex items-center justify-center"
-            >
-              <span className="hidden sm:inline">Pagar depois</span>
-              <span className="sm:hidden">Depois</span>
-            </button>
             <button
               type="button"
               onClick={handleConcluir}
