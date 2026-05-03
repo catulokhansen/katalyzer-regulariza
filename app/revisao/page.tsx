@@ -28,6 +28,20 @@ const TERMOS_LISTA = [
   "Autorizo o envio do termo de confissão de dívida e dos boletos para o e-mail e WhatsApp cadastrados.",
 ];
 
+type CanalEnvio = "email" | "sms" | null;
+
+function isContatoValido(canal: CanalEnvio, contato: string) {
+  if (!canal) return false;
+  const v = contato.trim();
+  if (canal === "email") return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  let digits = v.replace(/\D/g, "");
+  // Aceita prefixo do país (+55) sem alterar a regra de 10–11 dígitos
+  if (digits.startsWith("55") && (digits.length === 12 || digits.length === 13)) {
+    digits = digits.slice(2);
+  }
+  return digits.length >= 10 && digits.length <= 11;
+}
+
 function S4Content() {
   const router = useRouter();
   const doc = useRegularizaStore((s) => s.doc);
@@ -37,6 +51,10 @@ function S4Content() {
 
   const [aceitou, setAceitou] = useState(false);
   const [showTermos, setShowTermos] = useState(false);
+  const [canal, setCanal] = useState<CanalEnvio>(null);
+  const [contato, setContato] = useState("");
+
+  const podeConfirmar = aceitou && isContatoValido(canal, contato);
 
   const debitos = getDebitosSelecionados(selectedDebitos);
   const subTotal = debitos.reduce((s, d) => s + d.valor, 0);
@@ -56,7 +74,7 @@ function S4Content() {
   })).filter((g) => g.items.length > 0);
 
   const handleConfirmar = () => {
-    if (!aceitou) return;
+    if (!podeConfirmar) return;
     confirmarAcordo();
     router.push("/pagamento");
   };
@@ -218,6 +236,91 @@ function S4Content() {
                   <strong>só passa a ter efeito após o pagamento da 1ª parcela</strong>.
                 </span>
               </label>
+
+              {/* Canal de envio do termo */}
+              <div className="mt-5">
+                <div className="font-display font-semibold text-[11px] tracking-[.18em] uppercase text-kr-deep-78 mb-2.5">
+                  Como você quer receber o termo?
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (canal === "email") return;
+                      setCanal("email");
+                      setContato("");
+                    }}
+                    aria-pressed={canal === "email"}
+                    className={`p-4 rounded-lg border cursor-pointer transition-all duration-200 text-left ${
+                      canal === "email"
+                        ? "bg-kr-violet/[0.06] border-kr-violet/30"
+                        : "bg-kr-deep/[0.04] border-kr-deep/[0.14]"
+                    }`}
+                  >
+                    <div className="font-display font-semibold text-[14px] text-kr-deep">
+                      E-mail
+                    </div>
+                    <div className="font-sans text-[12px] text-kr-deep-62 mt-0.5">
+                      Receber por e-mail
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (canal === "sms") return;
+                      setCanal("sms");
+                      setContato("");
+                    }}
+                    aria-pressed={canal === "sms"}
+                    className={`p-4 rounded-lg border cursor-pointer transition-all duration-200 text-left ${
+                      canal === "sms"
+                        ? "bg-kr-violet/[0.06] border-kr-violet/30"
+                        : "bg-kr-deep/[0.04] border-kr-deep/[0.14]"
+                    }`}
+                  >
+                    <div className="font-display font-semibold text-[14px] text-kr-deep">
+                      SMS
+                    </div>
+                    <div className="font-sans text-[12px] text-kr-deep-62 mt-0.5">
+                      Receber por mensagem de texto
+                    </div>
+                  </button>
+                </div>
+
+                {canal !== null && (() => {
+                  const mostrarErro =
+                    contato.trim().length > 0 &&
+                    !isContatoValido(canal, contato);
+                  return (
+                    <div className="mt-3">
+                      <input
+                        className="w-full h-11 px-3.5 rounded-lg bg-white border border-kr-deep/[0.20] text-kr-deep font-sans text-[14px] outline-none focus-visible:outline-2 focus-visible:outline-kr-cyan"
+                        type={canal === "email" ? "email" : "tel"}
+                        inputMode={canal === "email" ? "email" : "numeric"}
+                        placeholder={
+                          canal === "email"
+                            ? "voce@exemplo.com"
+                            : "(11) 91234-5678"
+                        }
+                        value={contato}
+                        onChange={(e) => setContato(e.target.value)}
+                        aria-invalid={mostrarErro}
+                        aria-describedby={mostrarErro ? "kr-contato-hint" : undefined}
+                      />
+                      {mostrarErro && (
+                        <p
+                          id="kr-contato-hint"
+                          className="mt-1.5 font-sans text-[12px] text-kr-error"
+                        >
+                          {canal === "email"
+                            ? "Informe um e-mail válido."
+                            : "Informe um telefone com DDD (10 ou 11 dígitos)."}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
             </section>
           </div>
 
@@ -274,19 +377,19 @@ function S4Content() {
         </button>
 
         <div className="flex items-center gap-4 sm:gap-5">
-          {!aceitou && (
+          {!podeConfirmar && (
             <div
               role="status"
               className="font-sans text-[12px] text-kr-deep-62 hidden sm:block"
             >
-              Marque o aceite para confirmar
+              Marque o aceite e informe o canal de envio
             </div>
           )}
           <button
             type="button"
             onClick={handleConfirmar}
-            disabled={!aceitou}
-            aria-disabled={!aceitou}
+            disabled={!podeConfirmar}
+            aria-disabled={!podeConfirmar}
             className="kr-focus-ring h-14 px-6 rounded-[10px] border-0 text-white font-display font-semibold text-[15px] inline-flex items-center gap-3 tracking-[.2px] transition-all duration-200 bg-kr-deep shadow-[0_8px_24px_rgba(10,42,95,0.25)] hover:bg-kr-violet hover:-translate-y-px disabled:bg-kr-deep/20 disabled:cursor-not-allowed disabled:shadow-none disabled:text-white/[0.85] disabled:hover:bg-kr-deep/20 disabled:hover:translate-y-0"
           >
             Confirmar acordo
