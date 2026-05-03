@@ -10,7 +10,7 @@ interface PageHeaderProps {
 
 export function PageHeader({ current }: PageHeaderProps) {
   return (
-    <header className="relative z-10 h-20 md:h-24 px-5 md:px-12 lg:px-20 flex items-center justify-between border-b border-kr-deep-12 bg-kr-cream">
+    <header className="relative z-10 h-20 md:h-24 px-32 flex items-center justify-between border-b border-kr-deep-12 bg-kr-cream">
       <Link
         href="/"
         aria-label="Katalyzer Regulariza — página inicial"

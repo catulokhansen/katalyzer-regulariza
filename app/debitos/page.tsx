@@ -53,7 +53,7 @@ function S2Content() {
 
       <main
         id="kr-main"
-        className="relative z-10 flex-1 px-5 md:px-12 lg:px-20 pb-6"
+        className="relative z-10 flex-1 px-32 pb-6"
       >
         <ContribuinteHeader />
         <ParcelamentoAtivoBanner />

@@ -44,7 +44,7 @@ function S3Content() {
 
       <main
         id="kr-main"
-        className="relative z-10 flex-1 px-5 md:px-12 lg:px-20"
+        className="relative z-10 flex-1 px-32"
       >
         {/* Section header */}
         <section className="pt-8 pb-5 border-b border-kr-deep/10">
@@ -140,7 +140,7 @@ function S3Content() {
       </main>
 
       {/* Footer */}
-      <footer className="sticky bottom-0 z-20 left-0 right-0 h-[100px] bg-white border-t border-kr-deep/[0.14] px-5 md:px-12 lg:px-20 flex items-center justify-between gap-4 sm:gap-6 shadow-[0_-8px_24px_rgba(10,42,95,0.04)]">
+      <footer className="sticky bottom-0 z-20 left-0 right-0 h-[100px] bg-white border-t border-kr-deep/[0.14] px-32 flex items-center justify-between gap-4 sm:gap-6 shadow-[0_-8px_24px_rgba(10,42,95,0.04)]">
         <button
           type="button"
           onClick={() => router.push("/debitos")}

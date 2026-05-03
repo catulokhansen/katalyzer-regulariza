@@ -16,7 +16,7 @@ export function FooterFixoS2() {
   const qtd = getQtdSelecionada(selectedDebitos);
 
   return (
-    <footer className="sticky bottom-0 z-20 left-0 right-0 min-h-[88px] md:h-[100px] py-4 md:py-0 bg-white border-t border-kr-deep-12 px-5 md:px-12 lg:px-20 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between shadow-[0_-8px_24px_rgba(10,42,95,0.04)]">
+    <footer className="sticky bottom-0 z-20 left-0 right-0 min-h-[88px] md:h-[100px] py-4 md:py-0 bg-white border-t border-kr-deep-12 px-32 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between shadow-[0_-8px_24px_rgba(10,42,95,0.04)]">
       <button
         type="button"
         onClick={() => router.push("/")}
