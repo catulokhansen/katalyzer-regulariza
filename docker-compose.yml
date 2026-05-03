@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    container_name: katalyzer-regulariza
+    restart: unless-stopped
+    ports:
+      - "8081:3000"
+    environment:
+      - NODE_ENV=production

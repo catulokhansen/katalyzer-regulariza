@@ -22,7 +22,15 @@
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
+
+# editors
+.vscode/
+.idea/
+
+# docker
+docker-compose.override.yml
 
 # debug
 npm-debug.log*
