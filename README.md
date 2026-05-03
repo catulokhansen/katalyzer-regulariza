@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Katalyzer Regulariza · Portal do Contribuinte
 
-## Getting Started
+Front-end de um portal que permite ao contribuinte consultar débitos de dívida ativa municipal (IPTU, ISS, ITBI, TMRSU, multas), simular parcelamentos e formalizar um acordo em até 5 minutos.
 
-First, run the development server:
+> **Status:** demonstração somente front-end. Os débitos, contribuinte e parcelamento ativo vêm de mocks em `lib/debitos.ts`. Nenhum backend está conectado — `lib/api.ts` já tem o cliente axios configurado para `NEXT_PUBLIC_KR_API_URL`, mas ainda não é consumido.
+
+## Fluxo de 5 etapas
+
+O app é um wizard. Cada rota corresponde a uma etapa e o índice repassado ao `<Stepper>` precisa bater com a posição:
+
+| #  | Rota             | Etapa                |
+| -- | ---------------- | -------------------- |
+| 0  | `/`              | Identificação (CPF/CNPJ) |
+| 1  | `/debitos`       | Seleção de débitos   |
+| 2  | `/parcelamento`  | Escolha do plano     |
+| 3  | `/revisao`       | Revisão e aceite     |
+| 4  | `/pagamento`     | Pagamento da 1ª parcela + Conclusão |
+
+A navegação entre etapas é gateada pelo `RouteGuard` (`components/kr/route-guard.tsx`) — se o pré-requisito (doc, débitos, parcelas, termos, protocolo) não estiver preenchido na store, o usuário é redirecionado para `/`.
+
+## Stack
+
+- **Next.js 16.2.4** (App Router) + **React 19.2.4** + **TypeScript** estrito
+- **Tailwind CSS v4** (via `@tailwindcss/postcss`) — tokens declarados em `app/globals.css` sob `@theme inline`, sem arquivo `tailwind.config`
+- **Zustand 5** com `persist` em `sessionStorage` (chave `kr-regulariza`)
+- **shadcn/ui** (estilo `base-nova`) e **@base-ui/react** para primitivas (Dialog)
+- **axios**, **lucide-react**, **sonner**, **next-themes**
+- Fontes via `next/font`: Sora (display), Poppins (sans), Geist Mono
+
+## Como rodar
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Outros scripts:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build    # build de produção
+npm run start    # servir o build
+npm run lint     # eslint (flat config)
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Não há suíte de testes configurada.
 
-## Learn More
+## Estrutura
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/                  rotas (App Router) — uma página por etapa
+  page.tsx              S1 Identificação (server component)
+  debitos/page.tsx      S2
+  parcelamento/page.tsx S3
+  revisao/page.tsx      S4
+  pagamento/page.tsx    S5 (renderiza Conclusão in-place)
+  layout.tsx, globals.css
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+components/
+  kr/                 chrome compartilhado (PageHeader, Stepper, RouteGuard, ícones, etc.)
+  ui/                 primitivas shadcn (Dialog, Button, Input, …)
+  s1/ … s5/           componentes específicos de cada etapa
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+lib/
+  store.ts            Zustand (estado do wizard, persistido em sessionStorage)
+  debitos.ts          tipos + mocks (Debito, Contribuinte, ParcelamentoAtivo)
+  tributos.ts         TributoTipo, TRIBUTO_META, ORDEM_TRIBUTOS
+  parcelas.ts         tabela de parcelas, Selic, regraRecomendado, getPlanos
+  validators.ts       CPF/CNPJ com dígito verificador
+  formatters.ts       fmtBRL, maskDoc, maskDocPartial, maskContato
+  api.ts              cliente axios (placeholder)
+  utils.ts            helper cn() (clsx + tailwind-merge)
+```
 
-## Deploy on Vercel
+## Convenções
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Idioma:** UI, identificadores e domínio em **pt-BR** (`debitos`, `parcelas`, `tributos`, `contribuinte`).
+- **Path alias:** `@/*` resolve para a raiz. Use `@/lib/...` e `@/components/...` em vez de caminhos relativos.
+- **Componentes por etapa:** ao adicionar algo de uma etapa específica, coloque em `components/sN/` para manter o padrão.
+- **Tokens de marca:** prefixo `kr-*` (`kr-deep`, `kr-violet`, `kr-cyan`, `kr-cream`, `kr-paper`, `kr-error`) com variações de opacidade `kr-deep-78/62/55/36/18/12/08`.
+- **Utilitários customizados:** `kr-focus-ring`, `kr-link-focus`, `kr-tabular`, `kr-skip`, `kr-paper-grain` — definidos em `globals.css`.
+- **Cálculo de parcelas:** sempre via `getPlanos(total)` em `lib/parcelas.ts`. Não recompute juros à mão nos componentes.
+- **Moeda:** `R$ ${fmtBRL(n)}` em todo lugar (não usar `Intl.NumberFormat` com `style: "currency"`).
